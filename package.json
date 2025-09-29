@@ -1,0 +1,62 @@
+{
+  "name": "modular_layered_architecture_enterprise-ready",
+  "version": "1.0.0",
+  "description": "Build a scalable, modular, and maintainable e-commerce backend that supports modern enterprise requirements.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarkusTech/modular_layered_architecture_enterprise-ready.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarkusTech/modular_layered_architecture_enterprise-ready/issues"
+  },
+  "homepage": "https://github.com/MarkusTech/modular_layered_architecture_enterprise-ready#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^2.2.0",
+    "colors": "^1.4.0",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "hpp": "^0.2.3",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.1",
+    "sanitize-html": "^2.17.0",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "@prisma/client": "^5.10.0",
+    "@types/bcrypt": "^6.0.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/compression": "^1.8.1",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/express-rate-limit": "^5.1.3",
+    "@types/hpp": "^0.2.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.5.2",
+    "nodemon": "^3.1.10",
+    "prisma": "^5.10.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.2"
+  }
+}
