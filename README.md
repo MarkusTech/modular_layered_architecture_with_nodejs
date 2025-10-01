@@ -31,3 +31,14 @@ src/
 ├── app.ts # Express app setup
 └── server.ts # Entry point
 ```
+```bash
+modules/
+  <module>/
+    <module>.controller.ts
+    <module>.service.ts
+    <module>.repository.ts
+    <module>.routes.ts
+    <module>.dto.ts
+    <module>.validator.ts
+
+```
