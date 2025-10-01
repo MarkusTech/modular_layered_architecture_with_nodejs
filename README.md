@@ -53,3 +53,9 @@ modules/
 ```
 
 # Installation
+# 1. Clone the repository
+``` bash
+git clone https://github.com/your-username/modular_layered_architecture_with_nodejs.git
+cd modular_layered_architecture_with_nodejs
+
+```
