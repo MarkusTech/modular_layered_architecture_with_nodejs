@@ -1,5 +1,13 @@
 # modular_layered_architecture_with_nodejs
 
+# Feature
+- Modular layered structure for clean separation of concerns
+- Fully typed with TypeScript for safety and maintainability
+- Easy to add new modules (Auth, User, Wallet, Payment, etc.)
+- Integrated with Prisma ORM for database operations
+- Middleware support: authentication, validation, rate limiting, error handling
+- Ready for production with caching, background jobs, and logging
+
 # Folder Structure
 ```bash
 src/
@@ -31,6 +39,7 @@ src/
 ├── app.ts # Express app setup
 └── server.ts # Entry point
 ```
+# Module Structure
 ```bash
 modules/
   <module>/
@@ -42,3 +51,5 @@ modules/
     <module>.validator.ts
 
 ```
+
+# Installation
