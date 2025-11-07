@@ -1,6 +1,7 @@
 # modular_layered_architecture_with_nodejs
 
 # Feature
+
 - Modular layered structure for clean separation of concerns
 - Fully typed with TypeScript for safety and maintainability
 - Easy to add new modules (Auth, User, Wallet, Payment, etc.)
@@ -9,18 +10,19 @@
 - Ready for production with caching, background jobs, and logging
 
 # Folder Structure
+
 ```bash
 src/
 ├── config/ # Environment, Prisma client, Redis, Logger
 ├── middlewares/ # Auth, error handling, validation, rate limiting
 ├── modules/ # Each module represents a business domain
-│ ├── user/
-│ │ ├── user.routes.ts
-│ │ ├── user.controller.ts
-│ │ ├── user.service.ts
-│ │ ├── user.repository.ts
-│ │ ├── user.schema.ts
-│ │ └── user.events.ts
+│ ├── auth/
+│ │ ├── auth.routes.ts
+│ │ ├── auth.controller.ts
+│ │ ├── auth.service.ts
+│ │ ├── auth.repository.ts
+│ │ ├── auth.schema.ts
+│ │ └── auth.events.ts
 │ │
 │ ├── product/
 │ │ ├── product.routes.ts
@@ -39,7 +41,9 @@ src/
 ├── app.ts # Express app setup
 └── server.ts # Entry point
 ```
+
 # Module Structure
+
 ```bash
 modules/
   <module>/
@@ -53,20 +57,27 @@ modules/
 ```
 
 # Installation
+
 # 1. Clone the repository
-``` bash
+
+```bash
 git clone https://github.com/MarkusTech/modular_layered_architecture_with_nodejs.git
 cd modular_layered_architecture_with_nodejs
 ```
+
 # 2. Install dependencies
-``` bash
+
+```bash
 npm install
 or
 npm i
 ```
+
 # 3. Set up environment variables
+
 - Create a .env file in the root:
-``` bash
+
+```bash
 DATABASE_URL="mysql://user:password@localhost:3306/db_name"
 REDIS_URL="redis://localhost:6379"
 JWT_SECRET="your_jwt_secret"
@@ -75,17 +86,18 @@ STRIPE_WEBHOOK_SECRET="whsec_..."
 ```
 
 # 4. Run Prisma migrations
-``` bash
+
+```bash
 npx prisma migrate dev --name init
 npx prisma generate
 ```
 
 # 5. Start the server
-``` bash
+
+```bash
 npm run dev
 ```
 
-
-``` bash 
+```bash
  Happy Coding!!!!
 ```
