@@ -1,0 +1,15 @@
+import dotenv from "dotenv";
+dotenv.config();
+
+export const PORT = process.env.PORT || 5000;
+export const DATABASE_URL = process.env.DATABASE_URL!;
+export const DIDIT_API_KEY = process.env.DIDIT_API_KEY!;
+export const DIDIT_WORKFLOW_ID = process.env.DIDIT_WORKFLOW_ID!;
+export const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET!;
+export const FRONTEND_URL = process.env.FRONTEND_URL!;
+export const DIDIT_API_BASE = process.env.DIDIT_API_BASE!;
+
+export const JWT_SECRET = process.env.JWT_SECRET!;
+export const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
+export const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "15m";
+export const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || "7d";

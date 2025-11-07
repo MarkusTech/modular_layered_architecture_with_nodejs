@@ -3,199 +3,72 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
-//////////////////////////
-// USERS MODULE
-//////////////////////////
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  password     String
-  name         String
-  phone        String?
-  address      String?
-  profileImage String?
-  role         Role     @default(USER)
-  isActive     Boolean  @default(true)
-  isDeleted    Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  createdBy    String?
-  updatedBy    String?
+  id             Int       @id @default(autoincrement())
+  email          String    @unique
+  password       String
+  role           Role      @default(USER)
+  tokens         RefreshToken[]
+  firstName      String?
+  lastName       String?
+  phoneNumber    String?
+  address        String?
+  bio            String?
+  avatarUrl      String?
+  resetOtp       String?    
+  resetOtpExpiry DateTime?  
+  emailVerified  Boolean   @default(false)  
+  emailToken     String?                      
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
 
-  orders   Order[]
-  payments Payment[]
-  carts    Cart[]
+model RefreshToken {
+  id              Int            @id @default(autoincrement())
+  token           String         @unique
+  user            User           @relation(fields: [userId], references: [id])
+  userId          Int
+
+  // Rotation tracking (self-relations)
+  replacedById    Int?
+  replacedBy      RefreshToken?  @relation("TokenReplacement", fields: [replacedById], references: [id])
+  replacedTokens  RefreshToken[] @relation("TokenReplacement")
+
+  parentTokenId   Int?
+  parentToken     RefreshToken?  @relation("TokenParent", fields: [parentTokenId], references: [id])
+  childTokens     RefreshToken[] @relation("TokenParent")
+
+  expiresAt       DateTime
+  revoked         Boolean        @default(false)
+  createdAt       DateTime       @default(now())
 }
 
 enum Role {
   USER
   ADMIN
-  VENDOR
 }
 
-//////////////////////////
-// PRODUCTS MODULE (commented tenant)
-//////////////////////////
-model Product {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  price       Float
-  stock       Int      @default(0)
-  category    String?
-  tags        Json?
-  version     Int      @default(1)
-  isDeleted   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  createdBy   String?
-  updatedBy   String?
-
-  orderItems OrderItem[]
-  inventory  Inventory[]
-  cartItems  CartItem[]
+model KycVerification {
+  id              String   @id @default(uuid())
+  email           String   @unique
+  age             Int
+  status          String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  diditSessionId  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
-//////////////////////////
-// ORDERS MODULE (no tenant)
-//////////////////////////
-model Order {
-  id          String      @id @default(cuid())
-  userId      String
-  status      OrderStatus @default(PENDING)
-  totalAmount Float
-  isDeleted   Boolean     @default(false)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  createdBy   String?
-  updatedBy   String?
-
-  user     User        @relation(fields: [userId], references: [id])
-  items    OrderItem[]
-  payment  Payment?
-  shipment Shipment?
-}
-
-model OrderItem {
-  id        String @id @default(cuid())
-  orderId   String
-  productId String
-  quantity  Int
-  price     Float
-
-  order   Order   @relation(fields: [orderId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
-}
-
-enum OrderStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  CANCELLED
-  REFUNDED
-}
-
-//////////////////////////
-// PAYMENTS MODULE (no tenant)
-//////////////////////////
 model Payment {
-  id        String        @id @default(cuid())
-  orderId   String        @unique
-  userId    String
-  amount    Float
-  status    PaymentStatus @default(PENDING)
-  method    PaymentMethod
-  isDeleted Boolean       @default(false)
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  createdBy String?
-  updatedBy String?
-
-  order  Order  @relation(fields: [orderId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
-}
-
-enum PaymentStatus {
-  PENDING
-  COMPLETED
-  FAILED
-  REFUNDED
-}
-
-enum PaymentMethod {
-  CREDIT_CARD
-  PAYPAL
-  STRIPE
-  BANK_TRANSFER
-}
-
-//////////////////////////
-// INVENTORY MODULE (no tenant)
-//////////////////////////
-model Inventory {
-  id        String   @id @default(cuid())
-  productId String
-  warehouse String
-  quantity  Int
-  version   Int      @default(1)
-  isDeleted Boolean  @default(false)
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-  createdBy String?
-  updatedBy String?
-
-  product Product @relation(fields: [productId], references: [id])
-}
-
-//////////////////////////
-// CART MODULE (no tenant)
-//////////////////////////
-model Cart {
-  id        String   @id @default(cuid())
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user   User       @relation(fields: [userId], references: [id])
-  items  CartItem[]
-}
-
-model CartItem {
-  id        String @id @default(cuid())
-  cartId    String
-  productId String
-  quantity  Int
-  price     Float
-
-  cart    Cart    @relation(fields: [cartId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
-}
-
-//////////////////////////
-// SHIPMENT MODULE
-//////////////////////////
-model Shipment {
-  id             String         @id @default(cuid())
-  orderId        String         @unique
-  carrier        String
-  trackingNumber String
-  status         ShipmentStatus @default(PENDING)
-  shippedAt      DateTime?
-  deliveredAt    DateTime?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-
-  order Order @relation(fields: [orderId], references: [id])
-}
-
-enum ShipmentStatus {
-  PENDING
-  SHIPPED
-  IN_TRANSIT
-  DELIVERED
-  CANCELLED
+  id              String   @id @default(uuid())
+  userId          String
+  amount          Float
+  currency        String   @default("usd")
+  status          String   @default("pending")
+  stripePaymentId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

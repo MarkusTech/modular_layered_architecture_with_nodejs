@@ -1,28 +1,29 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyAccessToken } from "../utils/jwt";
+import ApiError from "../utils/apiError";
 
-export interface AuthRequest extends Request {
-  user?: any;
-}
+export function authenticate(req: Request, _res: Response, next: NextFunction) {
+  const header = req.headers.authorization;
+  if (!header?.startsWith("Bearer ")) {
+    throw new ApiError(401, "Missing or invalid Authorization header");
+  }
 
-export function authenticate(req: AuthRequest, res: Response, next: NextFunction) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ message: "No token provided" });
-  const token = authHeader.split(" ")[1];
+  const token = header.split(" ")[1];
+
   try {
     const decoded = verifyAccessToken(token);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
-  }
-}
 
-export function requireRoles(...roles: string[]) {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
-    if (!req.user || !roles.includes(req.user.role)) {
-      return res.status(403).json({ message: "Forbidden" });
+    if (!decoded.sub) {
+      throw new ApiError(401, "Invalid token payload");
     }
+
+    req.user = {
+      id: typeof decoded.sub === "string" ? parseInt(decoded.sub, 10) : decoded.sub,
+      role: decoded.role as string,
+    };
+
     next();
-  };
+  } catch {
+    throw new ApiError(401, "Invalid or expired token");
+  }
 }
